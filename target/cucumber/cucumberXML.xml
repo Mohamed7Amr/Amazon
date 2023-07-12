@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="116.052" tests="1" skipped="0" failures="0" errors="0">
+<testcase classname="Logged-in user adds products to the cart" name="Logged-in user can add video games to the cart" time="115.779">
+<system-out><![CDATA[
+When clicks on All menu.....................................................passed
+And clicks on video games...................................................passed
+And clicks all video games list item........................................passed
+Then user is surfing Video Games webpage....................................passed
+When clicks on free shipping checkbox.......................................passed
+And clicks on New condition.................................................passed
+And sorts the products by price from high to low............................passed
+And adds all products that its cost below 15k EGP...........................passed
+]]></system-out>
+</testcase>
+</testsuite>
