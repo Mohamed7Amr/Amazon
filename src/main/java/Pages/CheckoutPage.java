@@ -1,150 +1,108 @@
 package Pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Mohamed_Amr
+ */
 public class CheckoutPage {
-
     /*********************************************GLOBAL_VARIABLES************************************************/
-
-    private WebDriver driver;
+    WebDriver driver;
+    static String[][] table = new String[5][6];
+    WebDriverWait wait;
 
     /*********************************************CONSTRUCTORS****************************************************/
 
     public CheckoutPage(WebDriver driver)
     {
         this.driver = driver;
-        PageFactory.initElements(driver,this);
+        PageFactory.initElements(driver, this);
     }
+
 
     /*********************************************WEB_ELEMENTS********************************************************/
 
-    /*Some notations regarding variables naming:
-1) variables' suffix "Li" means it's an ordered-list-item element.
-2) variables' suffix "Categ" means it's a category element.
-3) variables' suffix "Chbox" means it's a checkbox element.
-4) variables' suffix "Rdo" means it's a checkbox element
+    @FindBy(css = "#subtotals-marketplace-table>table[class='a-normal small-line-height']")
+   static  WebElement orderSummaryTable;
+
+    /***********************************************METHODS**********************************************************/
+
+    /**
+     * this method takes all the data that are in the table-html-element, and put it in 2D Array, so i can use the pieces of data in every cell as I want
+     * I did this method as static, thus I can invoke in the "compareTotalAmount()" method in this class (CheckoutPage class)
      */
-
-//    @FindBy(xpath = "//h2[contains(text(),'Add a new address')]")
-//    WebElement addNewAddressTitle;
-
-    @FindBy(xpath = "//input[@id='address-ui-widgets-enterAddressFullName'][@type='text']")
-    WebElement fullNameTxt;
-
-    @FindBy(id = "address-ui-widgets-enterAddressPhoneNumber")
-    WebElement mobileNumberTxt;
-
-    @FindBy(xpath = "//input[@name='address-ui-widgets-enterAddressLine1'][@type='text']")
-    WebElement streetNameTxt;
-
-    @FindBy(xpath = "//input[@id='address-ui-widgets-enter-building-name-or-number'][@type='text']")
-    WebElement buildingNameTxt;
-
-    @FindBy(xpath = "//input[@id='address-ui-widgets-enterAddressCity'][@type='text']")
-    WebElement cityTxt;
-
-    @FindBy(className = "autoOp")
-    List<WebElement> cityDDL;
-
-    @FindBy(xpath = "//input[@id=address-ui-widgets-enterAddressDistrictOrCounty'][@type='text']")
-    WebElement districtDDL;
-
-    @FindBy(xpath = "//input[@id=address-ui-widgets-addr-details-res-radio-input'][@type='radio']")
-    WebElement addressTypeRdo;
-
-    /*******************************************METHODS**********************************************************/
-
-    public void jsClick(WebElement element)
+    public static void returnOrderSummaryTable()
     {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click",element);
-    }
+        List<WebElement> rows = orderSummaryTable.findElements(By.tagName("tr"));
+        System.out.println("Number of rows = "+ rows.size());
 
-    public void jsScroll(WebElement element)
-    {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView()",element);
-    }
+        for (int i =0; i< rows.size(); i*=1) {
+            for (WebElement row : rows) {
+                List<WebElement> cols = row.findElements(By.tagName("td"));
 
+                for (int j = 0; j < cols.size(); j *= 1) {
+                    for (WebElement col : cols) {
 
-    public void insertFullName(String name)
-    {
-        fullNameTxt.sendKeys(name);
-    }
-
-    public void insertMobileNumber(String mobile)
-    {
-        mobileNumberTxt.sendKeys(mobile);
-    }
-
-    public void insertStreetName(String name)
-    {
-        streetNameTxt.sendKeys(name);
-    }
-
-    public void insertBuildingNumber(String building)
-    {
-        buildingNameTxt.sendKeys(building);
-    }
-
-    public void selectCity()
-    {
-        cityTxt.click();
-        cityTxt.click();
-//        cityDDL.sendKeys("New");
-        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-//        Select listItems = new Select(cityDDL);
-
-        int i;
-        for(i=0; i<=cityDDL.size(); i++)
-        {
-            if(cityDDL.get(i).getText() == "New Cairo City, ")
-            {
-//                jsClick(cityDDL.get(i));
-                cityDDL.get(i).click();
+                        table[i][j] = col.getText();
+                        System.out.print(table[i][j] + "\t");
+                        j++;
+                    }
+                    System.out.println();
+                }
+                i++;
             }
-            else
+        }
+        for (int m = 0; m < table.length; m++)
+        {
+            for(int n = 0; n < table[m].length; n++)
             {
-                continue;
+                System.out.println(table[n][m]);
             }
         }
 
-//        listItems.selectByVisibleText("New Cairo City, ");
-//        listItems.se
     }
 
-    public void selectDistrict()
+    /**
+     * this method makes sure that the total amount of the products is calculated correctly with the added delivery-fees (if applicable),
+     * also with any deducted promotions (if applicable).
+     * it must use the Double class to parse strings data that are displayed in the DOM (amounts of money) to numbers of Double data-type.
+     */
+    public void compareTotalAmount()
     {
-        districtDDL.click();
-        districtDDL.sendKeys("1");
-        driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
-        Select listItems = new Select(districtDDL);
-        listItems.selectByVisibleText("1 (1st Settlement)");
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOf(orderSummaryTable));
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        returnOrderSummaryTable();
+
+        Double itemsTotalAmount = Double.parseDouble(table[0][1].replace("EGP","").replace(",",""));
+        Double shippingAndHandling = Double.parseDouble(table[1][1].replace("EGP","").replace(",",""));
+
+        Double promotionApplied = Double.parseDouble(table[3][1].replace("-EGP","").replace(",",""));//-
+
+        Double expectedOrderTotal = (itemsTotalAmount + shippingAndHandling)-promotionApplied;
+        Double actualOrderTotal = Double.parseDouble(table[5][1].replace("EGP","").replace(",",""));
+
+        Assert.assertEquals(actualOrderTotal,expectedOrderTotal,"total price confirmation Assertion msg");
+
+
     }
 
-    public void chooseAddressType()
-    {
-        addressTypeRdo.click();
-    }
 
-
-    /*******************************************ASSERTIONS**********************************************************/
-
-    public void shippingAddressDetailsDisplay()
-    {
-        String expectedResult = "Add a new address";
-        String actualResult = driver.findElement(By.xpath("//h2[contains(text(),'Add a new address')]")).getText();
-        Assert.assertTrue(actualResult.contains(expectedResult));
-    }
 
 }

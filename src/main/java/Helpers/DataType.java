@@ -18,4 +18,5 @@ public class DataType {
     {
         System.out.println("Float Type");
     }
+
 }

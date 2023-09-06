@@ -1,26 +1,23 @@
 package Pages;
 
-
-import Helpers.DataType;
+import Helpers.JsInjection;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
-import org.testng.asserts.SoftAssert;
-
-
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Mohamed_Amr
+ */
 public class VideoGamesPage {
 
     /*********************************************GLOBAL_VARIABLES************************************************/
     private WebDriver driver;
-    DataType dt = new DataType();
+    JsInjection jsi;
 
 
     /*********************************************CONSTRUCTORS****************************************************/
@@ -33,10 +30,11 @@ public class VideoGamesPage {
 
     /*********************************************WEB_ELEMENTS********************************************************/
 
-    /*Some notations regarding variables naming:
-1) variables' suffix "Li" means it's an ordered-list-item element.
-2) variables' suffix "Categ" means it's a category element.
-3) variables' suffix "Chbox" means it's a checkbox element.
+    /**
+     * Some notations regarding variables naming:
+     * 1) variables' suffix "Li" means it's an ordered-list-item element.
+     * 2) variables' suffix "Categ" means it's a category element.
+     * 3) variables' suffix "Chbox" means it's a checkbox element.
      */
 
 
@@ -46,7 +44,7 @@ public class VideoGamesPage {
     @FindBy(xpath = "//span[@class='a-size-base a-color-base'][contains(text(),'New')]")
     WebElement newConditionLink;
 
-    @FindBy(xpath = "//span[@class='a-dropdown-prompt'][contains(text(),'Featured')]")//a-autoid-0-announce
+    @FindBy(xpath = "//span[@class='a-dropdown-label'][contains(text(),'Sort by:')]")
     WebElement sortDDL;
 
     @FindBy(xpath= "a[@id='s-result-sort-select_2'][contains(text(),'Price: High to Low')]")//
@@ -66,33 +64,29 @@ public class VideoGamesPage {
 
     /*******************************************METHODS**********************************************************/
 
-    public void jsClick(WebElement element)
-    {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click",element);
-    }
-
-    public void jsScroll(WebElement element)
-    {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView()",element);
-    }
-
     public void doubleBack()
     {
         driver.navigate().back();
         driver.navigate().back();
     }
 
+    /**
+     * User filters the products that can be free-shipped
+     * @return void
+     */
     public void chooseFreeShipping()
     {
         freeShippingChbox.click();
     }
 
+    /**
+     * User filters the products to be all new products
+     */
     public void chooseNewCondition()
     {
+        jsi = new JsInjection(driver);
 
-        jsScroll(newConditionLink);
+        jsi.jsScroll(newConditionLink);
 
         try {
             Thread.sleep(5000);
@@ -103,24 +97,30 @@ public class VideoGamesPage {
         newConditionLink.click();
     }
 
+    /**
+     * User sorts products by price from high to low
+     */
     public void sortPriceHighLow()
     {
+        jsi = new JsInjection(driver);
+
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        jsClick(sortDDL);
         sortDDL.click();
         Select optionsList = new Select(driver.findElement(By.id("s-result-sort-select")));
         optionsList.selectByVisibleText("Price: High to Low");
-//        jsClick(highToLowLi);
-//        highToLowLi.click();
     }
 
+    /**
+     * User adds products that are only less than 15k EGP to the cart
+     */
     public void addToCart()
     {
+        jsi = new JsInjection(driver);
 
         try {
             Thread.sleep(5000);
@@ -128,22 +128,15 @@ public class VideoGamesPage {
             throw new RuntimeException(e);
         }
 
-//        for (WebElement price : videoGamesPrices)
-//        {
-//            System.out.println(Double.parseDouble(price.getText().replace(",","")));
-//            System.out.println(videoGamesPrices.size());
-//        }
-
         int i;
         int numberOfItems = 0;
-        for(i=0; i<videoGamesPrices.size(); i++)
+        for(i=0; i<videoGamesPrices.size(); i*=1)
         {
-            List<WebElement> products = driver.findElements(By.className("a-price-whole"));
+            videoGamesPrices = driver.findElements(By.className("a-price-whole"));
 
-            if(Double.parseDouble(products.get(i).getText().replace(",",""))<15000)
+            if(Double.parseDouble(videoGamesPrices.get(i).getText().replace(",","")) < 15000)
             {
-
-                products.get(i).click();
+                videoGamesPrices.get(i).click();
 
                 try {
                     Thread.sleep(2000);
@@ -153,55 +146,52 @@ public class VideoGamesPage {
 
                 if (addToCartBtn.isDisplayed())
                 {
-                    numberOfItems++;
                     addToCartBtn.click();
-
-                    //making sure that every product is added to cart
-//                    driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-//                    try
-//                    {
-////                        SoftAssert soft = new SoftAssert();
-//                        String expectedResult = "Added to Cart";
-//                        String actualResult = driver.findElement(By.xpath("//div[@class='a-fixed-left-grid-inner']")).getText();
-//                        Assert.assertTrue(actualResult.contains(expectedResult),"Added To Cart msg ASSERTION");
-//                        System.out.println(numberOfItems++ + " is the number of items added so far to cart");
-//                    }
-//                    catch(AssertionError e)
-//                    {
-//                        System.out.println(products.get(i).getText() +" is the product that has not been added to cart");
-//                        driver.navigate().back();
-//                    }
-
+                    numberOfItems++;
+                    i++;
 
                     try
                     {
-                        Thread.sleep(2000);
+                        String expectedResult = "Added to Cart";
+                        String actualResult = driver.findElement(By.xpath("//div[@class='a-fixed-left-grid-inner']")).getText();
+                        Assert.assertTrue(actualResult.contains(expectedResult),"Added To Cart msg ASSERTION");
+                        System.out.println(numberOfItems + " is the number of items added so far to cart");
+
+                         Thread.sleep(2000);
+
+                         doubleBack();
                     }
-                    catch (InterruptedException e)
+                    catch(AssertionError assertionError)
                     {
+                        System.out.println(numberOfItems + " is the product that has not been added to cart");
+                        driver.navigate().back();
+                    }
+                    catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    doubleBack();
                 }
                 else
                 {
                     driver.navigate().back();
                 }
             }
+            else if (Double.parseDouble(videoGamesPrices.get(i).getText().replace(",","")) > 15000)
+            {
+                i++;
+                continue;
+            }
+            else
+            {
+                nextPage();
+                i = 0;
+                videoGamesPrices = driver.findElements(By.className("a-price-whole"));
+            }
         }
-        if(numberOfItems == 0)
-        {
-            nextPage();
-        }
-        else
-        {
-            jsScroll(cartBtn);
-//            cartBtn.click();
-        }
-
-
     }
 
+    /**
+     * User goes forward for the next page of the search-results of the products he is looking for; page number 2,3,etc..
+     */
     public void nextPage()
     {
         nextPageBtn.click();

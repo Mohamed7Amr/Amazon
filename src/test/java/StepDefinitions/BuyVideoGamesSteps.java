@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.en_scouse.An;
 
 public class BuyVideoGamesSteps {
 
@@ -14,6 +13,8 @@ public class BuyVideoGamesSteps {
     LoginPage lp = new LoginPage(Hooks.driver);
     VideoGamesPage vgp = new VideoGamesPage(Hooks.driver);
     ShoppingCartPage scp = new ShoppingCartPage(Hooks.driver);
+    AddAddressPage aap = new AddAddressPage(Hooks.driver);
+
     CheckoutPage cp = new CheckoutPage(Hooks.driver);
 
 
@@ -99,39 +100,54 @@ public class BuyVideoGamesSteps {
     @Then("user is redirected to shipping address details")
     public void shippingAddressScreen()
     {
-        cp.shippingAddressDetailsDisplay();
+        aap.shippingAddressDetailsDisplay();
     }
 
     @When("^inserts full-name \"(.*)\" and mobile-number \"(.*)\"$")
     public void insertNameAndMobile(String name, String mobile)
     {
-        cp.insertFullName(name);
-        cp.insertMobileNumber(mobile);
+        aap.insertFullName(name);
+        aap.insertMobileNumber(mobile);
     }
 
     @And("^inserts street-name \"(.*)\" and building-number \"(.*)\"$")
     public void insertStreetAndBuilding(String street, String building)
     {
-        cp.insertStreetName(street);
-        cp.insertBuildingNumber(building);
+        aap.insertStreetName(street);
+        aap.insertBuildingNumber(building);
     }
 
-    @And("inserts City as New Cairo City")
-    public void insertCityName()
-    {
-        cp.selectCity();
+    @And("^inserts City as \"(.*)\"$")
+    public void insertCityName(String cityName) throws InterruptedException {
+        aap.selectCity(cityName);
     }
 
-    @And("inserts district as 1 (1st Settlement)")
-    public void insertDistrictName()
+    @And("^inserts district as \"(.*)\"$")
+    public void insertDistrictName(String districtName) throws InterruptedException {
+        aap.selectDistrict(districtName);
+    }
+
+    @And("^adds \"(.*)\" landmark to the address$")
+    public void addLandmarkToAddress(String landmarkName)
     {
-        cp.selectDistrict();
+        aap.addLandmark(landmarkName);
     }
 
     @And("chooses address-type as Home")
     public void chooseAddressType()
     {
-        cp.chooseAddressType();
+        aap.chooseAddressType();
+    }
+
+    @And("confirm Adding the address to the delivery-shipment")
+    public void addAddress()
+    {
+        aap.addAddressToDelivery();
+    }
+    @Then("check order total amount")
+    public void checkTotalOrder()
+    {
+        cp.compareTotalAmount();
     }
 
 }

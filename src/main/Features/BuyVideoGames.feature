@@ -20,7 +20,9 @@ Feature: Logged-in user adds products to the cart
     Then user is redirected to shipping address details
     When inserts full-name "John Doe" and mobile-number "1113599511"
     And inserts street-name "talaat harb" and building-number "8"
-    And inserts City as New Cairo City
-    And inserts district as 1 (1st Settlement)
+    And inserts City as "Cairo"
+    And inserts district as "1 1st Settlement"
+    And adds "Cairo-Festival" landmark to the address
     And chooses address-type as Home
-
+    And confirm Adding the address to the delivery-shipment
+    Then check order total amount

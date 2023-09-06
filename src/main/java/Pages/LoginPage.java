@@ -1,12 +1,24 @@
 package Pages;
 
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Mohamed_Amr
+ */
 public class LoginPage {
 
     /*********************************************GLOBAL_VARIABLES************************************************/
@@ -20,9 +32,6 @@ public class LoginPage {
         this.driver = driver;
         PageFactory.initElements(driver,this);
     }
-
-    /*********************************************SETTERS_&_GETTERS**************************************************/
-
 
     /*********************************************WEB_ELEMENTS********************************************************/
 
@@ -47,6 +56,12 @@ public class LoginPage {
 
     /*******************************************METHODS**********************************************************/
 
+    /**
+     * User signs-in with his valid credentials to access his account
+     * @param username is the username of which the user used to sign-up (create account on Amazon)
+     * @param password is the password of which the user used to sign-up (create account on Amazon)
+     * @return void
+     */
     public void login(String username, String password)
     {
         email_mobileTxt.sendKeys(username);
@@ -55,5 +70,29 @@ public class LoginPage {
         passwordTxt.sendKeys(password);
         signInBtn.click();
     }
+
+    /**
+     * that method would be applied if there was still a captcha
+     */
+//    public void solveCaptcha() throws IOException {
+//        WebElement imageElement = driver.findElement(By.xpath("//img[@src='http://cdn.magento-demo.lexiconn.com/skin/frontend/rwd/default/images/media/logo.png'"));
+//        File src = imageElement.getScreenshotAs(OutputType.FILE);
+//        FileUtils.copyFile(src, new File("./target/captcha.png"));
+//
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        ITesseract image = new Tesseract();
+//        try {
+//            String str = image.doOCR(new File("./target/captcha.png"));
+//        } catch (TesseractException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+
 
 }
