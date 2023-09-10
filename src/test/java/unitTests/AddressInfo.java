@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,13 +48,26 @@ public class AddressInfo {
         cityTxtBox.click();
 
         Thread.sleep(3000);
+        cityTxtBox.sendKeys("ramm");
+        Thread.sleep(3000);
 
-        cityTxtBox.sendKeys("Cairo");
+        List<WebElement> cityOptions = driver.findElements(By.tagName("li"));
+        for(int i = 0; i<cityOptions.size(); i++)
+        {
+            System.out.println(cityOptions.get(i).getText());
+            if(cityOptions.get(i).getText() == "Abou Rawash, Giza")
+            {
+                jsi.jsClick(cityOptions.get(i));
+                break;
+            }
+        }
 
-            Thread.sleep(3000);
-
-        cityTxtBox.sendKeys(Keys.ARROW_DOWN);
-
+//        cityTxtBox.sendKeys("Cairo");
+//
+//            Thread.sleep(3000);
+//
+//        cityTxtBox.sendKeys(Keys.ARROW_DOWN);
+//
             Thread.sleep(3000);
 
         cityTxtBox.sendKeys(Keys.ENTER);

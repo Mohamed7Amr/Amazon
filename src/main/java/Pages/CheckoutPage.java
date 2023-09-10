@@ -19,7 +19,7 @@ import java.util.List;
 public class CheckoutPage {
     /*********************************************GLOBAL_VARIABLES************************************************/
     WebDriver driver;
-    static String[][] table = new String[5][6];
+    static String[][] table = new String[6][2];
     WebDriverWait wait;
 
     /*********************************************CONSTRUCTORS****************************************************/
@@ -35,6 +35,8 @@ public class CheckoutPage {
 
     @FindBy(css = "#subtotals-marketplace-table>table[class='a-normal small-line-height']")
    static  WebElement orderSummaryTable;
+
+//   static List<WebElement> rows = orderSummaryTable.findElements(By.tagName("tr"));
 
     /***********************************************METHODS**********************************************************/
 
@@ -63,14 +65,6 @@ public class CheckoutPage {
                 i++;
             }
         }
-        for (int m = 0; m < table.length; m++)
-        {
-            for(int n = 0; n < table[m].length; n++)
-            {
-                System.out.println(table[n][m]);
-            }
-        }
-
     }
 
     /**
