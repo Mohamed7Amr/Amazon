@@ -1,4 +1,5 @@
 # Foodics(Amazon) Project - UI Automated Tests
+# Important Note: Before trying to run the script or re-run the script, sign-in to amazon with username:"fihones827@mahmul.com" and password:"12345678", and delete any saved addresses from Account-settings. 
 
 This repository will be used to create and execute automated tests to the Foodics-Amazon Project.  
 To be able to do that, below we can find some insights about:
@@ -28,10 +29,10 @@ that the settings.xml file is connecting to a maven repository so that Intellij 
     src
         |_ main
             |_ java
-                |_ Helpers
+                |_ helpers
                     |_ DataType
                     |_ JsInjections
-                |_ Helpers
+                |_ pages
                     |_ AddAddressPage
                     |_ CheckoutPage
                     |_ HomePage
@@ -43,9 +44,9 @@ that the settings.xml file is connecting to a maven repository so that Intellij 
                 
         |_ test
             |_ java
-                |_ Runners
+                |_ runners
                     |_TestRunner
-                |_ StepDefintions
+                |_ stepDefintions
                     |_BuyVideoGamesSteps
                     |_Hooks
                 |_unitTests
