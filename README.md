@@ -1,4 +1,5 @@
 # Foodics(Amazon) Project - UI Automated Tests
+# Important Note: Before trying to run the script or re-run the script, sign-in to amazon with username:"fihones827@mahmul.com" and password:"12345678", and delete any saved addresses from Account-settings. 
 
 This repository will be used to create and execute automated tests to the Foodics-Amazon Project.  
 To be able to do that, below we can find some insights about:
