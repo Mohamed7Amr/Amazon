@@ -60,7 +60,7 @@ There are 2 important groups of files to be placed to create a test:
 - **Feature**
   - Can be found under: src/main/resources/features
   - Written in Gherkin language and mirroring business scenarios using a readable and accessible language for everybody.
-- **StepDefinitions**
+- **stepDefinitions**
   - Can be found under: src/test/java/org.example/stepDefs
   - They are written in Java language and, they define what is supposed to be done for each of the steps from one 
     business scenario described in the Feature file.

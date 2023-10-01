@@ -1,10 +1,7 @@
-package Pages;
+package pages;
 
-import Helpers.JsInjection;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -17,16 +14,11 @@ import java.util.concurrent.TimeUnit;
  * @author Mohamed_Amr
  */
 
-public class HomePage {
+public class HomePage extends PageBase{
 
     /*********************************************GLOBAL_VARIABLES************************************************/
-    private WebDriver driver;
+
     WebDriverWait wait;
-
-    JsInjection jsi;
-
-    Actions actions;
-
 
 
     /*********************************************CONSTRUCTORS****************************************************/
@@ -38,8 +30,7 @@ public class HomePage {
  */
 
     public  HomePage(WebDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
 
     /*********************************************WEB_ELEMENTS********************************************************/
@@ -87,17 +78,13 @@ public class HomePage {
     public void chooseEnglishLanguage() {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        jsi = new JsInjection(driver);
-
-        actions = new Actions(driver);
-
         wait.until(ExpectedConditions.elementToBeClickable(localizationBtn));
 
-        actions.moveToElement(localizationBtn).perform();
+        hoverOnElement(localizationBtn);
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-        jsi.jsClick(englishOption);
+        jsClick(englishOption);
 
     }
     /**
@@ -120,13 +107,18 @@ public class HomePage {
      */
     public void clickAllBtn()
     {
+        /**
+         * Sleep is a must here because un expected behavior happens from the website if it does not exist
+         */
+
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        actions.moveToElement(allMainMenu).click().perform();
+        hoverOnElement(allMainMenu);
+        jsClick(allMainMenu);
     }
 
     /**
@@ -134,9 +126,9 @@ public class HomePage {
      */
     public void openVideoGamesLi()
     {
-        jsi = new JsInjection(driver);
-        seeAllLi.click();
-        jsi.jsClick(videoGamesLi);
+        waitElementVisibility(5, seeAllLi);
+        jsClick(seeAllLi);
+        jsClick(videoGamesLi);
     }
 
     /**
@@ -144,7 +136,7 @@ public class HomePage {
      */
     public void clickAllVideoGamesLi()
     {
-        allVideoGamesLi.click();
+        jsClick(allVideoGamesLi);
     }
 
 

@@ -1,31 +1,23 @@
-package Pages;
+package pages;
 
-import Helpers.JsInjection;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 
 /**
  * @author Mohamed_Amr
  */
-public class AddAddressPage {
+public class AddAddressPage extends PageBase {
 
     /*********************************************GLOBAL_VARIABLES************************************************/
 
-    private WebDriver driver;
 
-    JsInjection jsi;
-
-    Actions actions;
 
     /*********************************************CONSTRUCTORS****************************************************/
 
     public AddAddressPage(WebDriver driver)
     {
-        this.driver = driver;
-        PageFactory.initElements(driver,this);
+        super(driver);
     }
 
     /*********************************************WEB_ELEMENTS********************************************************/
@@ -73,22 +65,22 @@ public class AddAddressPage {
      */
     public void insertFullName(String name)
     {
-        fullNameTxt.sendKeys(name);
+        writeText(fullNameTxt,name);
     }
 
     public void insertMobileNumber(String mobile)
     {
-        mobileNumberTxt.sendKeys(mobile);
+        writeText(mobileNumberTxt,mobile);
     }
 
     public void insertStreetName(String name)
     {
-        streetNameTxt.sendKeys(name);
+        writeText(streetNameTxt,name);
     }
 
     public void insertBuildingNumber(String building)
     {
-        buildingNameTxt.sendKeys(building);
+        writeText(buildingNameTxt,building);
     }
 
     public void selectCity(String cityName) throws InterruptedException {
@@ -126,8 +118,8 @@ public class AddAddressPage {
 
     public void addLandmark(String landmarkName)
     {
-        jsi = new JsInjection(driver);
-        jsi.jsScroll(landmarkTxtBox);
+
+        jsScroll(landmarkTxtBox);
         landmarkTxtBox.sendKeys(landmarkName);
         landmarkTxtBox.sendKeys((Keys.TAB));
     }
@@ -139,9 +131,9 @@ public class AddAddressPage {
 
     public void addAddressToDelivery()
     {
-        jsi = new JsInjection(driver);
-        jsi.jsScroll(addAddressBtn);
-        jsi.jsClick(addAddressBtn);
+
+       jsScroll(addAddressBtn);
+       jsClick(addAddressBtn);
     }
 
 
@@ -153,7 +145,7 @@ public class AddAddressPage {
     {
         String expectedResult = "Add a new address";
         String actualResult = driver.findElement(By.xpath("//h2[contains(text(),'Add a new address')]")).getText();
-        Assert.assertTrue(actualResult.contains(expectedResult));
+        Assert.assertTrue(actualResult.contains(expectedResult),"Not redirected to Add-Address webpage");
     }
 
 }

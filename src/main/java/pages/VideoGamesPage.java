@@ -1,11 +1,9 @@
-package Pages;
+package pages;
 
-import Helpers.JsInjection;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import java.util.List;
@@ -13,19 +11,16 @@ import java.util.List;
 /**
  * @author Mohamed_Amr
  */
-public class VideoGamesPage {
+public class VideoGamesPage extends PageBase {
 
     /*********************************************GLOBAL_VARIABLES************************************************/
-    private WebDriver driver;
-    JsInjection jsi;
 
 
     /*********************************************CONSTRUCTORS****************************************************/
 
     public VideoGamesPage(WebDriver driver)
     {
-        this.driver = driver;
-        PageFactory.initElements(driver,this);
+        super(driver);
     }
 
     /*********************************************WEB_ELEMENTS********************************************************/
@@ -45,13 +40,15 @@ public class VideoGamesPage {
     WebElement newConditionLink;
 
     @FindBy(xpath = "//span[@class='a-dropdown-label'][contains(text(),'Sort by:')]")
-    WebElement sortDDL;
+    WebElement sortDDLBtn;
 
-    @FindBy(xpath= "a[@id='s-result-sort-select_2'][contains(text(),'Price: High to Low')]")//
-    WebElement highToLowLi;
+    @FindBy(xpath = "(//ul[@class='a-nostyle a-list-link'])[1]")
+    WebElement sortByUl;
 
     @FindBy(className = "a-price-whole")
     List<WebElement>videoGamesPrices;
+
+//    List<WebElement> videoGamesPrices = driver.findElements(By.className("a-price-whole"));
 
     @FindBy(id = "add-to-cart-button")
     WebElement addToCartBtn;
@@ -84,17 +81,8 @@ public class VideoGamesPage {
      */
     public void chooseNewCondition()
     {
-        jsi = new JsInjection(driver);
-
-        jsi.jsScroll(newConditionLink);
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        newConditionLink.click();
+       jsScroll(newConditionLink);
+       jsClick(newConditionLink);
     }
 
     /**
@@ -102,90 +90,78 @@ public class VideoGamesPage {
      */
     public void sortPriceHighLow()
     {
-        jsi = new JsInjection(driver);
-
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        sortDDL.click();
-        Select optionsList = new Select(driver.findElement(By.id("s-result-sort-select")));
-        optionsList.selectByVisibleText("Price: High to Low");
+        clickWebElement(sortDDLBtn);
+
+        List<WebElement> sortByItems = sortByUl.findElements(By.tagName("a"));
+        for(WebElement item: sortByItems)
+        {
+            if(item.getText().equals("Price: High to Low"))
+            {
+                clickWebElement(item);
+            }
+        }
+
     }
 
+    int numberOfItems = 0;
+    public void choose15KPriceProducts() {
+
+        int i;
+        for (i = 0; i < videoGamesPrices.size(); i *= 1) {
+
+//            videoGamesPrices = driver.findElements(By.className("a-price-whole"));
+
+            if (Double.parseDouble(videoGamesPrices.get(i).getText().replace(",", "")) <= 15000) {
+                clickWebElement(videoGamesPrices.get(i));
+                numberOfItems++;
+
+                if (addToCartBtn.isDisplayed()) {
+                    jsClick(addToCartBtn);
+                    i++;
+
+                    try {
+                        String expectedResult = "Added to Cart";
+                        String actualResult = driver.findElement(By.xpath("//div[@class='a-fixed-left-grid-inner']")).getText();
+                        Assert.assertTrue(actualResult.contains(expectedResult), "Added To Cart msg ASSERTION");
+                        System.out.println(numberOfItems + " is the number of items added so far to cart");
+
+                        Thread.sleep(2000);
+
+                        doubleBack();
+                    } catch (AssertionError assertionError) {
+                        System.out.println(numberOfItems + " is the product that has not been added to cart");
+                        driver.navigate().back();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    driver.navigate().back();
+                }
+            }
+
+            else if (Double.parseDouble(videoGamesPrices.get(i).getText().replace(",", "")) > 15000)
+            {
+                i++;
+            }
+        }
+    }
     /**
      * User adds products that are only less than 15k EGP to the cart
      */
     public void addToCart()
     {
-        jsi = new JsInjection(driver);
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        int i;
-        int numberOfItems = 0;
-        for(i=0; i<videoGamesPrices.size(); i*=1)
+        choose15KPriceProducts();
+        while(numberOfItems == 0)
         {
-            videoGamesPrices = driver.findElements(By.className("a-price-whole"));
-
-            if(Double.parseDouble(videoGamesPrices.get(i).getText().replace(",","")) < 15000)
-            {
-                videoGamesPrices.get(i).click();
-
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                if (addToCartBtn.isDisplayed())
-                {
-                    addToCartBtn.click();
-                    numberOfItems++;
-                    i++;
-
-                    try
-                    {
-                        String expectedResult = "Added to Cart";
-                        String actualResult = driver.findElement(By.xpath("//div[@class='a-fixed-left-grid-inner']")).getText();
-                        Assert.assertTrue(actualResult.contains(expectedResult),"Added To Cart msg ASSERTION");
-                        System.out.println(numberOfItems + " is the number of items added so far to cart");
-
-                         Thread.sleep(2000);
-
-                         doubleBack();
-                    }
-                    catch(AssertionError assertionError)
-                    {
-                        System.out.println(numberOfItems + " is the product that has not been added to cart");
-                        driver.navigate().back();
-                    }
-                    catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                else
-                {
-                    driver.navigate().back();
-                }
-            }
-            else if (Double.parseDouble(videoGamesPrices.get(i).getText().replace(",","")) > 15000)
-            {
-                i++;
-                continue;
-            }
-            else
-            {
-                nextPage();
-                i = 0;
-                videoGamesPrices = driver.findElements(By.className("a-price-whole"));
-            }
+            nextPage();
+            waitElementsVisibility(10, videoGamesPrices);
+            choose15KPriceProducts();
         }
     }
 
@@ -194,7 +170,8 @@ public class VideoGamesPage {
      */
     public void nextPage()
     {
-        nextPageBtn.click();
+        jsScroll(nextPageBtn);
+        jsClick(nextPageBtn);
     }
 
     public void goToCart()

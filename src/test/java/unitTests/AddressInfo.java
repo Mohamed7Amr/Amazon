@@ -1,6 +1,5 @@
 package unitTests;
 
-import Helpers.JsInjection;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -10,9 +9,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
+import pages.PageBase;
 
 import java.time.Duration;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -26,13 +25,14 @@ public class AddressInfo {
     Actions actions = new Actions(driver);
 
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    JsInjection jsi = new JsInjection(driver);
+    PageBase jsi = new PageBase(driver);
 
     @Test
     public void fillAddressInfo() throws InterruptedException {
+
         driver.get("https://www.amazon.eg/dp/B0BXXZTSW7?ref_=Oct_DLandingS_D_8a5c2ede_NA&th=1");
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(7));
         actions.moveToElement(driver.findElement(By.className("icp-nav-link-inner"))).perform();
         driver.findElement(By.xpath("//a[@href='#switch-lang=en_AE']/span[@class='nav-text']/i[@class='icp-radio']")).click();
         Thread.sleep(3000);

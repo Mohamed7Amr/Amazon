@@ -1,45 +1,26 @@
-package Pages;
+package pages;
 
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.testng.Assert;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Mohamed_Amr
  */
-public class LoginPage {
+public class LoginPage extends PageBase {
 
     /*********************************************GLOBAL_VARIABLES************************************************/
 
-    private WebDriver driver;
 
     /*********************************************CONSTRUCTORS****************************************************/
 
     public LoginPage(WebDriver driver)
     {
-        this.driver = driver;
-        PageFactory.initElements(driver,this);
+        super(driver);
     }
 
     /*********************************************WEB_ELEMENTS********************************************************/
-
-    /*Some notations regarding variables naming:
-1) variables' suffix "Li" means it's an ordered-list-item element.
-2) variables' suffix "Categ" means it's a category element.
-3) variables' suffix "Chbox" means it's a checkbox element.
-     */
 
     @FindBy(id = "ap_email")
     WebElement email_mobileTxt;
@@ -64,11 +45,11 @@ public class LoginPage {
      */
     public void login(String username, String password)
     {
-        email_mobileTxt.sendKeys(username);
-        continueBtn.click();
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        passwordTxt.sendKeys(password);
-        signInBtn.click();
+        writeText(email_mobileTxt, username);
+        clickWebElement(continueBtn);
+
+        writeText(passwordTxt, password);
+        clickWebElement(signInBtn);
     }
 
     /**

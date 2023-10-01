@@ -1,13 +1,17 @@
-package StepDefinitions;
+package stepDefinitions;
 
 import io.cucumber.java.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+import pages.HomePage;
+
+import java.time.Duration;
 
 public class Hooks {
     /********************************************ATTRIBUTES*************************************/
     public static WebDriver driver;
+//    HomePage hp;
 
     /*********************************************METHODS****************************************************/
 
@@ -15,9 +19,12 @@ public class Hooks {
     public void setUpEnvironment()
     {
         driver = new ChromeDriver();
+//        hp = new HomePage(driver);
         driver.get("https://www.amazon.eg/");
         driver.manage().window().maximize();
         driver.navigate().refresh();
+        driver.navigate().refresh();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(7));
 
         String expectedResult1 = "https://www.amazon.eg/";
         String actualResult1 = driver.getCurrentUrl();

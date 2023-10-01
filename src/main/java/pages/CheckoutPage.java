@@ -1,12 +1,10 @@
-package Pages;
+package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
@@ -16,27 +14,28 @@ import java.util.List;
 /**
  * @author Mohamed_Amr
  */
-public class CheckoutPage {
+public class CheckoutPage extends PageBase {
     /*********************************************GLOBAL_VARIABLES************************************************/
-    WebDriver driver;
-    static String[][] table = new String[6][2];
-    WebDriverWait wait;
+
+    int x;
+    String[][] table = new String[6][2];
+
 
     /*********************************************CONSTRUCTORS****************************************************/
 
     public CheckoutPage(WebDriver driver)
     {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
-
 
     /*********************************************WEB_ELEMENTS********************************************************/
 
     @FindBy(css = "#subtotals-marketplace-table>table[class='a-normal small-line-height']")
-   static  WebElement orderSummaryTable;
+    WebElement orderSummaryTable;
 
-//   static List<WebElement> rows = orderSummaryTable.findElements(By.tagName("tr"));
+    @FindBy(xpath = "//div[@class='a-column a-span10']/h3[contains(.,'Offers')]")
+    WebElement offersTitle;
+
 
     /***********************************************METHODS**********************************************************/
 
@@ -44,10 +43,11 @@ public class CheckoutPage {
      * this method takes all the data that are in the table-html-element, and put it in 2D Array, so i can use the pieces of data in every cell as I want
      * I did this method as static, thus I can invoke in the "compareTotalAmount()" method in this class (CheckoutPage class)
      */
-    public static void returnOrderSummaryTable()
+    public  void returnOrderSummaryTable()
     {
         List<WebElement> rows = orderSummaryTable.findElements(By.tagName("tr"));
         System.out.println("Number of rows = "+ rows.size());
+        x = rows.size();
 
         for (int i =0; i< rows.size(); i*=1) {
             for (WebElement row : rows) {
@@ -65,6 +65,7 @@ public class CheckoutPage {
                 i++;
             }
         }
+
     }
 
     /**
@@ -74,25 +75,37 @@ public class CheckoutPage {
      */
     public void compareTotalAmount()
     {
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOf(orderSummaryTable));
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        waitElementVisibility(10, offersTitle);
+        waitElementVisibility(10, orderSummaryTable);
 
         returnOrderSummaryTable();
 
-        Double itemsTotalAmount = Double.parseDouble(table[0][1].replace("EGP","").replace(",",""));
-        Double shippingAndHandling = Double.parseDouble(table[1][1].replace("EGP","").replace(",",""));
+        if(x<6)
+        {
+            Double itemsTotalAmount = Double.parseDouble(table[0][1].replace("EGP","").replace(",",""));
+            Double shippingAndHandling = Double.parseDouble(table[1][1].replace("EGP","").replace(",",""));
+//            Double promotionApplied = Double.parseDouble(table[3][1].replace("-EGP","").replace(",",""));
 
-        Double promotionApplied = Double.parseDouble(table[3][1].replace("-EGP","").replace(",",""));//-
+            Double expectedOrderTotal = itemsTotalAmount + shippingAndHandling;
+            Double actualOrderTotal = Double.parseDouble(table[3][1].replace("EGP","").replace(",",""));
 
-        Double expectedOrderTotal = (itemsTotalAmount + shippingAndHandling)-promotionApplied;
-        Double actualOrderTotal = Double.parseDouble(table[5][1].replace("EGP","").replace(",",""));
+            Assert.assertEquals(actualOrderTotal,expectedOrderTotal,"total price confirmation Assertion msg");
+        }
 
-        Assert.assertEquals(actualOrderTotal,expectedOrderTotal,"total price confirmation Assertion msg");
+        else {
+            Double itemsTotalAmount = Double.parseDouble(table[0][1].replace("EGP","").replace(",",""));
+            Double shippingAndHandling = Double.parseDouble(table[1][1].replace("EGP","").replace(",",""));
+
+            Assert.assertEquals(Double.parseDouble(table[2][1].replace("EGP","").replace(",","")),
+                    itemsTotalAmount+shippingAndHandling,"Total before promotion is applied assertion");
+
+            Double promotionApplied = Double.parseDouble(table[3][1].replace("-EGP","").replace(",",""));
+
+            Double expectedOrderTotal = (itemsTotalAmount + shippingAndHandling)-promotionApplied;
+            Double actualOrderTotal = Double.parseDouble(table[5][1].replace("EGP","").replace(",",""));
+
+            Assert.assertEquals(actualOrderTotal,expectedOrderTotal,"total price confirmation Assertion msg");
+        }
 
 
     }

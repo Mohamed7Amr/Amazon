@@ -1,6 +1,6 @@
-package StepDefinitions;
+package stepDefinitions;
 
-import Pages.*;
+import pages.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -144,6 +144,7 @@ public class BuyVideoGamesSteps {
     {
         aap.addAddressToDelivery();
     }
+
     @Then("check order total amount")
     public void checkTotalOrder()
     {
