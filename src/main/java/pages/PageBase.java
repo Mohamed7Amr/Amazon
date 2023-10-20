@@ -1,90 +1,123 @@
 package pages;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
 public class PageBase {
 
-    protected WebDriver driver;
+    /*********************************************GLOBAL_VARIABLES****************************************************/
 
+    protected WebDriver driver;
+    private Actions action;
+    private JavascriptExecutor js;
+    private WebDriverWait wait;
+
+    /*********************************************CONSTRUCTORS****************************************************/
+    public PageBase()
+    {
+
+    }
     public PageBase(WebDriver driver)
     {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
-    /*****************************************************REPEATED_USER_ACTIONS*********************************************/
+    /**********************************************REPEATED_USER_ACTIONS*********************************************/
 
-    public void clickWebElement(WebElement ele)
+    protected void clickWebElement(WebElement ele)
     {
         ele.click();
     }
 
-    public void writeText(WebElement ele, String text)
+    protected void writeText(WebElement ele, String text)
     {
         ele.sendKeys(text);
     }
 
     /*****************************************************ACTIONS_METHODS*********************************************/
 
-    public void hoverOnElement(WebElement ele)
+    protected void hoverOnElement(WebElement ele)
     {
-        Actions action = new Actions(driver);
+        action = new Actions(driver);
         action.moveToElement(ele).perform();
     }
 
     /*****************************************************JS_INJECTION*********************************************/
 
-    public void jsClick(WebElement element)
+    protected void jsClick(WebElement element)
     {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click()",element);
     }
 
-    public void jsScroll(WebElement element)
+    protected void jsScroll(WebElement element)
     {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView()",element);
     }
 
     /*****************************************************EXPLICIT_WAIT*********************************************/
 
-    public void waitElementVisibility(int seconds, WebElement ele)
+    protected void waitElementVisibility(int seconds, WebElement ele)
     {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
         wait.until(ExpectedConditions.visibilityOf(ele));
     }
 
-    public void waitElementsVisibility(int seconds, List<WebElement> eles)
+    protected void waitElementsVisibility(int seconds, List<WebElement> eles)
     {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
         wait.until(ExpectedConditions.visibilityOfAllElements(eles));
     }
+
+    /***********************************************SCREENSHOT_INTERFACE*********************************************/
+
+    protected void takeScreenShot(String ssNameExtension)  {
+        TakesScreenshot ss = (TakesScreenshot) driver;
+        File sourceFile = ss.getScreenshotAs(OutputType.FILE);
+        File targetFile = new File("Screenshots/"+ ssNameExtension);
+        try {
+            FileUtils.copyFile(sourceFile,targetFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**************************************************TESTNG_LISTENERS*********************************************/
+
+//    public void onTestFailure(ITestListener result)
+//    {
+//
+//    }
+
 
     /*****************************************************DATA_TYPES*********************************************/
 
 
-    public void displayType(int var)
+    protected void displayType(int var)
     {
         System.out.println("Integer Type");
     }
-    public void displayType(String var)
+    protected void displayType(String var)
     {
         System.out.println("StringType");
     }
-    public void displayType(Double var)
+    protected void displayType(Double var)
     {
         System.out.println("Double Type");
     }
-    public void displayType(Float var)
+    protected void displayType(Float var)
     {
         System.out.println("Float Type");
     }
