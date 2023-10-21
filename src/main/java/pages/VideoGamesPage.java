@@ -13,9 +13,6 @@ import java.util.List;
  */
 public class VideoGamesPage extends PageBase {
 
-    /*********************************************GLOBAL_VARIABLES************************************************/
-
-
     /*********************************************CONSTRUCTORS****************************************************/
 
     public VideoGamesPage(WebDriver driver)
@@ -47,8 +44,6 @@ public class VideoGamesPage extends PageBase {
 
     @FindBy(className = "a-price-whole")
     List<WebElement>videoGamesPrices;
-
-//    List<WebElement> videoGamesPrices = driver.findElements(By.className("a-price-whole"));
 
     @FindBy(id = "add-to-cart-button")
     WebElement addToCartBtn;
@@ -113,15 +108,18 @@ public class VideoGamesPage extends PageBase {
     public void choose15KPriceProducts() {
 
         int i;
-        for (i = 0; i < videoGamesPrices.size(); i *= 1) {
+        for (i = 0; i < videoGamesPrices.size(); i *= 1)
+        {
 
 //            videoGamesPrices = driver.findElements(By.className("a-price-whole"));
 
-            if (Double.parseDouble(videoGamesPrices.get(i).getText().replace(",", "")) <= 15000) {
+            if (Double.parseDouble(videoGamesPrices.get(i).getText().replace(",", "")) <= 15000)
+            {
                 clickWebElement(videoGamesPrices.get(i));
                 numberOfItems++;
 
-                if (addToCartBtn.isDisplayed()) {
+                if (addToCartBtn.isDisplayed())
+                {
                     jsClick(addToCartBtn);
                     i++;
 

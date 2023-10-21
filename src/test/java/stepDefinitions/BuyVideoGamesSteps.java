@@ -1,5 +1,6 @@
 package stepDefinitions;
 
+import dataReader.LoadProperties;
 import pages.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -8,21 +9,19 @@ import io.cucumber.java.en.When;
 
 public class BuyVideoGamesSteps {
 
-    HomePage hp = new HomePage(Hooks.driver);
+    /***********************************************GLOBAL_VARIABLES*************************************************/
 
-    LoginPage lp = new LoginPage(Hooks.driver);
-    VideoGamesPage vgp = new VideoGamesPage(Hooks.driver);
-    ShoppingCartPage scp = new ShoppingCartPage(Hooks.driver);
-    AddAddressPage aap = new AddAddressPage(Hooks.driver);
+    private HomePage hp = new HomePage(Hooks.driver);
+    private LoginPage lp = new LoginPage(Hooks.driver);
+    private VideoGamesPage vgp = new VideoGamesPage(Hooks.driver);
+    private ShoppingCartPage scp = new ShoppingCartPage(Hooks.driver);
+    private AddAddressPage aap = new AddAddressPage(Hooks.driver);
+    private CheckoutPage cp = new CheckoutPage(Hooks.driver);
+    private String username = LoadProperties.userTestData.getProperty("username");
+    private String password = LoadProperties.userTestData.getProperty("password");
 
-    CheckoutPage cp = new CheckoutPage(Hooks.driver);
 
-
-//    @Given("^User logs-in to his amazon account using username \"(.*)\" and password \"(.*)\"$")
-//    public void sigIn()
-//    {
-//        lp.login();
-//    }
+    /************************************************TEST_STEPS******************************************************/
 
     @When("clicks on All menu")
     public void openAllMenu()
@@ -91,8 +90,8 @@ public class BuyVideoGamesSteps {
         scp.proceedToBuy();
     }
 
-    @When("^logs-in using username \"(.*)\" and password \"(.*)\"$")
-    public void enterLoginCredentials(String username, String password)
+    @When("logs-in using valid username and valid password")
+    public void enterLoginCredentials()
     {
         lp.login(username,password);
     }

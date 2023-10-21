@@ -9,10 +9,6 @@ import org.testng.Assert;
  */
 public class AddAddressPage extends PageBase {
 
-    /*********************************************GLOBAL_VARIABLES************************************************/
-
-
-
     /*********************************************CONSTRUCTORS****************************************************/
 
     public AddAddressPage(WebDriver driver)

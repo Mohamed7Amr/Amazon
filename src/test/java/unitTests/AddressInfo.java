@@ -4,40 +4,41 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.testng.annotations.Test;
 import pages.PageBase;
+import stepDefinitions.Hooks;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 
 /**
  * This is a unit-test class that is like for a shortcut to reach the Add-Address flow easier and faster
  */
 
-public class AddressInfo {
+public class AddressInfo extends PageBase {
 
-    WebDriver driver = new ChromeDriver();
-    Actions actions = new Actions(driver);
 
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    PageBase jsi = new PageBase(driver);
+    /*********************************************CONSTRUCTORsr****************************************************/
+    public AddressInfo(WebDriver driver) {
+        super(Hooks.driver);
+    }
+
 
     @Test
-    public void fillAddressInfo() throws InterruptedException {
+    public void fillAddressInfo() throws InterruptedException, IOException {
 
         driver.get("https://www.amazon.eg/dp/B0BXXZTSW7?ref_=Oct_DLandingS_D_8a5c2ede_NA&th=1");
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(7));
-        actions.moveToElement(driver.findElement(By.className("icp-nav-link-inner"))).perform();
+        hoverOnElement(driver.findElement(By.className("icp-nav-link-inner")));
+//        takeScreenShot();
         driver.findElement(By.xpath("//a[@href='#switch-lang=en_AE']/span[@class='nav-text']/i[@class='icp-radio']")).click();
         Thread.sleep(3000);
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("span[id='submit.add-to-cart-announce']"))));
-        jsi.jsClick(driver.findElement(By.cssSelector("input[title = 'Add to Shopping Cart']")));
+//        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.cssSelector("span[id='submit.add-to-cart-announce']"))));
+        jsClick(driver.findElement(By.cssSelector("input[title = 'Add to Shopping Cart']")));
         driver.findElement(By.id("sc-buy-box-ptc-button")).click();
         driver.findElement(By.id("ap_email")).sendKeys("fihones827@mahmul.com");
         driver.findElement(By.id("continue")).click();
@@ -57,7 +58,7 @@ public class AddressInfo {
             System.out.println(cityOptions.get(i).getText());
             if(cityOptions.get(i).getText() == "Abou Rawash, Giza")
             {
-                jsi.jsClick(cityOptions.get(i));
+                jsClick(cityOptions.get(i));
                 break;
             }
         }
@@ -93,7 +94,7 @@ public class AddressInfo {
 //        districtTxtBox.sendKeys(Keys.TAB);
 
         WebElement landmarkTxtBox = driver.findElement(By.id("address-ui-widgets-landmark"));
-        jsi.jsScroll(landmarkTxtBox);
+        jsScroll(landmarkTxtBox);
         landmarkTxtBox.sendKeys("Cairo-Festival");
         landmarkTxtBox.sendKeys(Keys.TAB);
 

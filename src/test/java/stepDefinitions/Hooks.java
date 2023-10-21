@@ -1,25 +1,33 @@
 package stepDefinitions;
 
+import dataReader.LoadProperties;
 import io.cucumber.java.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
-import pages.HomePage;
-
 import java.time.Duration;
 
 public class Hooks {
     /********************************************ATTRIBUTES*************************************/
     public static WebDriver driver;
-//    HomePage hp;
+    private String browser = LoadProperties.envConfig.getProperty("browser");
+    private String url = LoadProperties.envConfig.getProperty("URL");
 
     /*********************************************METHODS****************************************************/
 
     @Before
     public void setUpEnvironment()
     {
-        driver = new ChromeDriver();
-//        hp = new HomePage(driver);
+        switch (browser)
+        {
+            case "chrome": driver = new ChromeDriver();break;
+            case "firefox": driver = new FirefoxDriver();break;
+            case "edge": driver = new EdgeDriver();break;
+            default: driver = new ChromeDriver();break;
+        }
+
         driver.get("https://www.amazon.eg/");
         driver.manage().window().maximize();
         driver.navigate().refresh();
@@ -31,9 +39,9 @@ public class Hooks {
         Assert.assertEquals(actualResult1,expectedResult1,"SETUP ENVIRONMENT ASSERTION 1");
     }
 
-    @After
-    public void clearUpEnvironment() throws InterruptedException {
+//    @After
+//    public void clearUpEnvironment() throws InterruptedException {
 //        Thread.sleep(5000);
 //        driver.quit();
-    }
+//    }
 }

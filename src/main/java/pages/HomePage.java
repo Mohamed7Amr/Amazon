@@ -2,11 +2,7 @@ package pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This is a Web-page Class for Amazon-Home(Landing page) that includes all the required elements and methods that deal some actions
@@ -15,11 +11,6 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class HomePage extends PageBase{
-
-    /*********************************************GLOBAL_VARIABLES************************************************/
-
-    WebDriverWait wait;
-
 
     /*********************************************CONSTRUCTORS****************************************************/
 
@@ -35,27 +26,11 @@ public class HomePage extends PageBase{
 
     /*********************************************WEB_ELEMENTS********************************************************/
 
-/*Some notations regarding variables naming:
-1) variables' suffix "Li" means it's an ordered-list-item element.
-2) variables' suffix "Categ" means it's a category element.
- */
 
-    @FindBy(className = "icp-nav-link-inner")
-    WebElement localizationBtn;
+    WebElement localizationBtn = driver.findElement(By.className("icp-nav-link-inner"));
 
     @FindBy (xpath = "//a[@href='#switch-lang=en_AE']/span[@class='nav-text']/i[@class='icp-radio']")
     WebElement englishOption;
-
-    /**
-     * I still haven't used these 2 web-elements because it will only be used if i start my test-case with logging-in first then do the rest of
-     * the steps, and i shall do that if i am able to pass the captcha.
-     */
-
-//    @FindBy(xpath = "//span[@class='nav-line-2 '][contains(text(),'Account & Lists')]")
-//    WebElement account_and_ListsBtn;
-//
-//    @FindBy(xpath = "//span[@class='nav-action-inner'][contains(text(),'Sign in')]")
-//    WebElement signInBtn;
 
     @FindBy(xpath = "//i[@class='hm-icon nav-sprite']")
     WebElement allMainMenu;
@@ -76,31 +51,13 @@ public class HomePage extends PageBase{
      * User chooses English as preferred language for the interface
      */
     public void chooseEnglishLanguage() {
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        wait.until(ExpectedConditions.elementToBeClickable(localizationBtn));
-
+        waitElementVisibility(10,localizationBtn);
         hoverOnElement(localizationBtn);
-
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-
+        takeScreenShot("hovering_Lang_Btn.png");
         jsClick(englishOption);
-
     }
-    /**
-     * I still haven't used these 2 web-elements because it will only be used if i start my test-case with logging-in first then do the rest of
-     * the steps, and i shall do that if i am able to pass the captcha.
-     */
 
-//    public void hoverOnAccounts_And_Lists()
-//    {
-//        actions.moveToElement(account_and_ListsBtn).perform();
-//    }
-
-//    public void clickSignInBtn()
-//    {
-//        signInBtn.click();
-//    }
 
     /**
      * User opens All Main Menu that contains all categories and sub-categories

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="Cucumber" time="154.646" tests="1" skipped="0" failures="1" errors="0">
-<testcase classname="Logged-in user adds products to the cart" name="Logged-in user can add video games to the cart" time="154.374">
-<failure type="java.lang.AssertionError" message="Correct Total Amount of Products Assertion  expected [89699.66] but found [89699.664]">
-<![CDATA[java.lang.AssertionError: Correct Total Amount of Products Assertion  expected [89699.66] but found [89699.664]
+<testsuite name="Cucumber" time="211.606" tests="1" skipped="0" failures="1" errors="0">
+<testcase classname="Logged-in user adds products to the cart" name="Logged-in user can add video games to the cart" time="211.323">
+<failure type="java.lang.AssertionError" message="Correct Total Amount of Products Assertion  expected [42521.99] but found [42521.992]">
+<![CDATA[java.lang.AssertionError: Correct Total Amount of Products Assertion  expected [42521.99] but found [42521.992]
 	at org.testng.Assert.fail(Assert.java:110)
 	at org.testng.Assert.failNotEquals(Assert.java:1577)
 	at org.testng.Assert.assertEquals(Assert.java:866)
-	at pages.ShoppingCartPage.confirmSubtotal(ShoppingCartPage.java:62)
-	at stepDefinitions.BuyVideoGamesSteps.allProductsInCart(BuyVideoGamesSteps.java:85)
-	at ✽.all products are there with their subtotal correctly calculated(file:///C:/Users/moham/IdeaProjects/FoodicsTask/src/main/Features/BuyVideoGames.feature:17)
+	at pages.ShoppingCartPage.confirmSubtotal(ShoppingCartPage.java:56)
+	at stepDefinitions.BuyVideoGamesSteps.allProductsInCart(BuyVideoGamesSteps.java:84)
+	at ✽.all products are there with their subtotal correctly calculated(file:///C:/Users/moham/IdeaProjects/FoodicsTask/src/main/Features/BuyVideoGames.feature:16)
 ]]>
 </failure>
 <system-out><![CDATA[
@@ -23,7 +23,7 @@ And adds any product to cart that its cost below 15k EGP....................pass
 When clicks on cart.........................................................passed
 Then all products are there with their subtotal correctly calculated........failed
 Given User clicks on proceed to purchase and be redirected to login page....skipped
-When logs-in using username "fihones827@mahmul.com" and password "12345678".skipped
+When logs-in using valid username and valid password........................skipped
 Then user is redirected to shipping address details.........................skipped
 When inserts full-name "John Doe" and mobile-number "1113599511"............skipped
 And inserts street-name "talaat harb" and building-number "8"...............skipped
