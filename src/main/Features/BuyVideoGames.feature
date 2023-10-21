@@ -25,5 +25,3 @@ Feature: Logged-in user adds products to the cart
     And chooses address-type as Home
     And confirm Adding the address to the delivery-shipment
     Then check order total amount
-
-
