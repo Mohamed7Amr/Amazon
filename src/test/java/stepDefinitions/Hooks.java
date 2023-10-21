@@ -28,7 +28,7 @@ public class Hooks {
             default: driver = new ChromeDriver();break;
         }
 
-        driver.get("https://www.amazon.eg/");
+        driver.get(url);
         driver.manage().window().maximize();
         driver.navigate().refresh();
         driver.navigate().refresh();
